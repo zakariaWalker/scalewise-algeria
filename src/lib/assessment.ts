@@ -10,65 +10,58 @@ export type Question = {
   id: string;
   category: CategoryKey;
   text: string;
-  /** higher answer = more mature */
   inverted?: boolean;
 };
 
-export const CATEGORIES: { key: CategoryKey; label: string; description: string }[] = [
-  { key: "leadership", label: "Leadership Dependency", description: "How much does the business rely on the founder?" },
-  { key: "operations", label: "Operations", description: "Are workflows documented and standardized?" },
-  { key: "team", label: "Team Structure", description: "Role clarity, accountability and delegation." },
-  { key: "commercial", label: "Commercial System", description: "Predictable sales, CRM and customer tracking." },
-  { key: "financial", label: "Financial Visibility", description: "Dashboards, KPIs and profitability clarity." },
-  { key: "scalability", label: "Scalability Readiness", description: "Process maturity and management layers." },
+export const CATEGORIES: { key: CategoryKey; label: string; short: string; description: string }[] = [
+  { key: "leadership", label: "الاعتماد على القيادة", short: "القيادة", description: "إلى أي مدى تعتمد الشركة على المؤسّس؟" },
+  { key: "operations", label: "العمليات والتشغيل", short: "العمليات", description: "هل سير العمل موثّق وموحّد؟" },
+  { key: "team", label: "هيكلة الفريق", short: "الفريق", description: "وضوح الأدوار والمسؤوليات والتفويض." },
+  { key: "commercial", label: "النظام التجاري", short: "التجاري", description: "مبيعات متوقَّعة، CRM ومتابعة عملاء." },
+  { key: "financial", label: "الرؤية المالية", short: "المالية", description: "لوحات قيادة، مؤشرات أداء وربحية واضحة." },
+  { key: "scalability", label: "الجاهزية للتوسّع", short: "التوسّع", description: "نضج العمليات ووجود طبقة إدارية وسطى." },
 ];
 
 export const QUESTIONS: Question[] = [
-  // Leadership (inverted: high = founder-dependent => low maturity)
-  { id: "L1", category: "leadership", text: "Decisions stop when the founder is absent.", inverted: true },
-  { id: "L2", category: "leadership", text: "Most strategic & operational calls are made by the founder.", inverted: true },
-  { id: "L3", category: "leadership", text: "Managers are empowered to decide within clear boundaries." },
-  { id: "L4", category: "leadership", text: "The founder could take a 2-week disconnected vacation without disruption." },
+  { id: "L1", category: "leadership", text: "تتوقف القرارات في غياب المؤسّس.", inverted: true },
+  { id: "L2", category: "leadership", text: "معظم القرارات الاستراتيجية والتشغيلية يتخذها المؤسّس وحده.", inverted: true },
+  { id: "L3", category: "leadership", text: "المسؤولون لديهم صلاحية اتخاذ القرارات ضمن حدود واضحة." },
+  { id: "L4", category: "leadership", text: "يستطيع المؤسّس أخذ إجازة لأسبوعين دون أن تتعطّل الشركة." },
 
-  // Operations
-  { id: "O1", category: "operations", text: "Core processes are documented as SOPs accessible to the team." },
-  { id: "O2", category: "operations", text: "Work is standardized — the same task is done the same way by everyone." },
-  { id: "O3", category: "operations", text: "Production / service delivery depends on specific individuals.", inverted: true },
-  { id: "O4", category: "operations", text: "Recurring issues are tracked and resolved systemically." },
+  { id: "O1", category: "operations", text: "العمليات الأساسية موثّقة كإجراءات (SOPs) متاحة للفريق." },
+  { id: "O2", category: "operations", text: "العمل موحّد — نفس المهمة تُنجز بنفس الطريقة من قبل الجميع." },
+  { id: "O3", category: "operations", text: "تسليم الخدمة أو الإنتاج يعتمد على أشخاص بعينهم.", inverted: true },
+  { id: "O4", category: "operations", text: "المشاكل المتكررة يتم رصدها وحلّها بشكل منهجي." },
 
-  // Team
-  { id: "T1", category: "team", text: "Every role has a clear written job description and accountabilities." },
-  { id: "T2", category: "team", text: "Reporting lines and decision rights are unambiguous." },
-  { id: "T3", category: "team", text: "Coordination across teams happens through rituals (weekly, daily standups…)." },
-  { id: "T4", category: "team", text: "The team waits for the founder to unblock tasks.", inverted: true },
+  { id: "T1", category: "team", text: "كل دور لديه توصيف وظيفي مكتوب ومسؤوليات واضحة." },
+  { id: "T2", category: "team", text: "خطوط التقارير وصلاحيات القرار واضحة لا لبس فيها." },
+  { id: "T3", category: "team", text: "التنسيق بين الفرق يتم عبر طقوس منتظمة (اجتماعات يومية أو أسبوعية)." },
+  { id: "T4", category: "team", text: "الفريق ينتظر المؤسّس لإزالة العقبات.", inverted: true },
 
-  // Commercial
-  { id: "C1", category: "commercial", text: "Sales pipeline is predictable month over month." },
-  { id: "C2", category: "commercial", text: "A CRM is used consistently to track leads and customers." },
-  { id: "C3", category: "commercial", text: "Sales follow a documented process from lead to close." },
-  { id: "C4", category: "commercial", text: "Customer retention and follow-up are systematized." },
+  { id: "C1", category: "commercial", text: "خط المبيعات (Pipeline) متوقَّع من شهر لآخر." },
+  { id: "C2", category: "commercial", text: "نستخدم CRM بانتظام لمتابعة العملاء المحتملين والحاليين." },
+  { id: "C3", category: "commercial", text: "المبيعات تتبع عملية موثّقة من العميل المحتمل إلى الإغلاق." },
+  { id: "C4", category: "commercial", text: "الاحتفاظ بالعملاء والمتابعة بعد البيع منظَّمان." },
 
-  // Financial
-  { id: "F1", category: "financial", text: "We have live dashboards for revenue, cash and margins." },
-  { id: "F2", category: "financial", text: "Key KPIs are reviewed in a recurring management meeting." },
-  { id: "F3", category: "financial", text: "Profitability per product / service / client is visible." },
-  { id: "F4", category: "financial", text: "Financial reporting is reactive and ad-hoc.", inverted: true },
+  { id: "F1", category: "financial", text: "لدينا لوحات قيادة حيّة للإيرادات والسيولة والهامش." },
+  { id: "F2", category: "financial", text: "المؤشرات الرئيسية تُراجَع في اجتماع إداري دوري." },
+  { id: "F3", category: "financial", text: "الربحية لكل منتج / خدمة / عميل واضحة." },
+  { id: "F4", category: "financial", text: "التقارير المالية ردّة فعل ومتأخرة.", inverted: true },
 
-  // Scalability
-  { id: "S1", category: "scalability", text: "Hiring follows a structured process with onboarding playbooks." },
-  { id: "S2", category: "scalability", text: "A middle-management layer exists between founder and execution." },
-  { id: "S3", category: "scalability", text: "Processes can absorb 2× volume without breaking." },
-  { id: "S4", category: "scalability", text: "Org chart and growth plan for the next 12 months exists." },
+  { id: "S1", category: "scalability", text: "التوظيف يتبع عملية منظّمة مع برامج تأهيل." },
+  { id: "S2", category: "scalability", text: "توجد طبقة إدارية وسطى بين المؤسّس والتنفيذ." },
+  { id: "S3", category: "scalability", text: "العمليات قادرة على استيعاب ضعف الحجم الحالي دون أن تنهار." },
+  { id: "S4", category: "scalability", text: "لدينا هيكل تنظيمي وخطة نمو واضحة للـ 12 شهراً القادمة." },
 ];
 
-export type Answers = Record<string, number>; // 0..4 (Strongly disagree → Strongly agree)
+export type Answers = Record<string, number>;
 
 export const SCALE = [
-  { value: 0, label: "Strongly disagree" },
-  { value: 1, label: "Disagree" },
-  { value: 2, label: "Neutral" },
-  { value: 3, label: "Agree" },
-  { value: 4, label: "Strongly agree" },
+  { value: 0, label: "أرفض بشدة" },
+  { value: 1, label: "أرفض" },
+  { value: 2, label: "محايد" },
+  { value: 3, label: "أوافق" },
+  { value: 4, label: "أوافق بشدة" },
 ];
 
 export function scoreAnswer(q: Question, value: number): number {
@@ -97,11 +90,11 @@ export type MaturityStage = {
 };
 
 export const STAGES: MaturityStage[] = [
-  { key: "artisan", label: "Artisan", range: [0, 20], blurb: "The business runs on craft, intuition and constant founder presence." },
-  { key: "founder", label: "Founder-Centric", range: [21, 40], blurb: "Early structure exists, but everything flows through the founder." },
-  { key: "structured", label: "Structured SME", range: [41, 60], blurb: "Roles and basic processes are in place; coordination is improving." },
-  { key: "process", label: "Process-Driven", range: [61, 80], blurb: "Workflows, KPIs and delegation make the company resilient without the founder." },
-  { key: "scalable", label: "Scalable Organization", range: [81, 100], blurb: "Systems, management layers and data enable predictable scaling." },
+  { key: "artisan", label: "حِرفيّة", range: [0, 20], blurb: "الشركة تعمل بالحدس والممارسة الفردية والحضور الدائم للمؤسّس." },
+  { key: "founder", label: "متمحوِرة حول المؤسّس", range: [21, 40], blurb: "بدايات هيكلة، لكن كل شيء يمرّ عبر المؤسّس." },
+  { key: "structured", label: "مؤسسة منظَّمة", range: [41, 60], blurb: "أدوار وإجراءات أساسية موجودة؛ التنسيق يتحسّن." },
+  { key: "process", label: "موجَّهة بالعمليات", range: [61, 80], blurb: "إجراءات ومؤشرات وتفويض تجعل الشركة قادرة على الاستمرار دون المؤسّس." },
+  { key: "scalable", label: "مؤسسة قابلة للتوسّع", range: [81, 100], blurb: "أنظمة وطبقات إدارية وبيانات تتيح نمواً متوقَّعاً." },
 ];
 
 export function stageFor(score: number): MaturityStage {
@@ -114,7 +107,14 @@ export type Bottleneck = {
   severity: "low" | "medium" | "high" | "critical";
   impact: string;
   recommendation: string;
-  urgency: "Now" | "30 days" | "90 days";
+  urgency: "فوراً" | "خلال 30 يوماً" | "خلال 90 يوماً";
+};
+
+export const SEVERITY_LABELS: Record<Bottleneck["severity"], string> = {
+  critical: "حرِج",
+  high: "مرتفع",
+  medium: "متوسط",
+  low: "منخفض",
 };
 
 export function detectBottlenecks(answers: Answers): Bottleneck[] {
@@ -125,34 +125,34 @@ export function detectBottlenecks(answers: Answers): Bottleneck[] {
 
   const lib: Record<CategoryKey, Omit<Bottleneck, "category" | "severity" | "urgency">> = {
     leadership: {
-      title: "Your business is highly dependent on founder decisions.",
-      impact: "Decision bottleneck slows execution and creates fragility when you're absent.",
-      recommendation: "Define decision rights, delegate 3 recurring decisions to managers this month.",
+      title: "الشركة تعتمد بشكل مفرط على قرارات المؤسّس.",
+      impact: "اختناق القرار يُبطئ التنفيذ ويجعل الشركة هشّة في غيابك.",
+      recommendation: "حدّد صلاحيات القرار، وفوّض 3 قرارات متكررة لمسؤولين هذا الشهر.",
     },
     operations: {
-      title: "Operations are largely undocumented.",
-      impact: "Quality varies by person, onboarding is slow, scaling multiplies chaos.",
-      recommendation: "Document the 5 most repeated workflows as one-page SOPs with owners.",
+      title: "العمليات غير موثّقة إلى حدٍ كبير.",
+      impact: "الجودة تتفاوت من شخص لآخر، التأهيل بطيء، والتوسّع يضاعف الفوضى.",
+      recommendation: "وثّق أكثر 5 عمليات تكراراً كإجراءات SOP من صفحة واحدة مع مسؤول لكل منها.",
     },
     team: {
-      title: "Team coordination lacks structure.",
-      impact: "Tasks fall between roles; founder becomes the human router.",
-      recommendation: "Publish a role chart and install a weekly 30-min operations review.",
+      title: "تنسيق الفريق يفتقر إلى البنية.",
+      impact: "تسقط المهام بين الأدوار، ويصبح المؤسّس وسيط التواصل البشري.",
+      recommendation: "انشر مخطط الأدوار، وأقم مراجعة عمليات أسبوعية مدتها 30 دقيقة.",
     },
     commercial: {
-      title: "Commercial processes are reactive.",
-      impact: "Revenue is unpredictable, follow-up is inconsistent, leads leak.",
-      recommendation: "Adopt a lightweight CRM and define a 5-stage sales pipeline this month.",
+      title: "العمليات التجارية ردّة فعل.",
+      impact: "الإيرادات غير متوقَّعة، المتابعة غير منتظمة، والفرص تضيع.",
+      recommendation: "اعتمد CRM بسيط وحدّد خط مبيعات من 5 مراحل هذا الشهر.",
     },
     financial: {
-      title: "Financial visibility is limited.",
-      impact: "Decisions rely on gut feel; profitability per client/product is unclear.",
-      recommendation: "Build a 1-page weekly KPI dashboard: revenue, cash, margin, AR.",
+      title: "الرؤية المالية محدودة.",
+      impact: "القرارات تُتخذ بالحدس؛ ربحية كل عميل/منتج غير واضحة.",
+      recommendation: "ابنِ لوحة مؤشرات أسبوعية من صفحة واحدة: الإيراد، السيولة، الهامش، الذمم.",
     },
     scalability: {
-      title: "Organization is not ready to scale.",
-      impact: "Growth will magnify current inefficiencies and burnout.",
-      recommendation: "Design the 12-month org chart and identify the 2 next critical hires.",
+      title: "المؤسسة غير جاهزة للتوسّع.",
+      impact: "النمو سيُضخّم الفوضى الحالية والإرهاق.",
+      recommendation: "صمّم الهيكل التنظيمي لـ 12 شهراً وحدّد التوظيفَيْن الأكثر أهمية.",
     },
   };
 
@@ -164,7 +164,7 @@ export function detectBottlenecks(answers: Answers): Bottleneck[] {
         category: k,
         ...lib[k],
         severity,
-        urgency: severity === "critical" || severity === "high" ? "Now" : severity === "medium" ? "30 days" : "90 days",
+        urgency: severity === "critical" || severity === "high" ? "فوراً" : severity === "medium" ? "خلال 30 يوماً" : "خلال 90 يوماً",
       });
     }
   });
@@ -176,7 +176,7 @@ export function detectBottlenecks(answers: Answers): Bottleneck[] {
 }
 
 export type RoadmapItem = {
-  horizon: "Immediate" | "30 days" | "90 days" | "6 months" | "1 year";
+  horizon: "فوري" | "30 يوم" | "90 يوم" | "6 أشهر" | "سنة";
   title: string;
   description: string;
   priority: "P0" | "P1" | "P2";
@@ -187,34 +187,34 @@ export type RoadmapItem = {
 
 const ROADMAP_LIBRARY: Record<CategoryKey, RoadmapItem[]> = {
   leadership: [
-    { horizon: "Immediate", title: "Map your decision bottlenecks", description: "List the 10 decisions only you make. Mark which can be delegated.", priority: "P0", impact: 5, complexity: 1, category: "leadership" },
-    { horizon: "30 days", title: "Install a weekly leadership review", description: "60-minute weekly meeting: priorities, blockers, KPIs, decisions.", priority: "P0", impact: 5, complexity: 2, category: "leadership" },
-    { horizon: "90 days", title: "Delegate 3 recurring decisions", description: "Transfer with written decision criteria and review cadence.", priority: "P1", impact: 4, complexity: 3, category: "leadership" },
+    { horizon: "فوري", title: "ارسم خريطة اختناقات القرار", description: "اكتب أهم 10 قرارات تتخذها وحدك. حدّد ما يمكن تفويضه.", priority: "P0", impact: 5, complexity: 1, category: "leadership" },
+    { horizon: "30 يوم", title: "أسّس مراجعة قيادية أسبوعية", description: "اجتماع 60 دقيقة أسبوعياً: الأولويات، العقبات، المؤشرات، القرارات.", priority: "P0", impact: 5, complexity: 2, category: "leadership" },
+    { horizon: "90 يوم", title: "فوّض 3 قرارات متكررة", description: "انقلها بمعايير قرار مكتوبة ومراجعة دورية.", priority: "P1", impact: 4, complexity: 3, category: "leadership" },
   ],
   operations: [
-    { horizon: "30 days", title: "Document the top 5 SOPs", description: "One-page SOPs for the most repeated workflows. Assign owners.", priority: "P0", impact: 5, complexity: 2, category: "operations" },
-    { horizon: "90 days", title: "Standardize delivery workflow", description: "Single end-to-end process from order intake to delivery.", priority: "P1", impact: 4, complexity: 3, category: "operations" },
-    { horizon: "6 months", title: "Quality control checkpoints", description: "Install 3 quality gates with measurable acceptance criteria.", priority: "P2", impact: 3, complexity: 3, category: "operations" },
+    { horizon: "30 يوم", title: "وثّق أهم 5 إجراءات SOP", description: "إجراءات من صفحة واحدة لأكثر سير العمل تكراراً، مع مسؤول لكلٍ.", priority: "P0", impact: 5, complexity: 2, category: "operations" },
+    { horizon: "90 يوم", title: "وحّد سير عملية التسليم", description: "عملية واحدة من استلام الطلب إلى التسليم.", priority: "P1", impact: 4, complexity: 3, category: "operations" },
+    { horizon: "6 أشهر", title: "نقاط ضبط الجودة", description: "أنشئ 3 بوّابات جودة بمعايير قبول قابلة للقياس.", priority: "P2", impact: 3, complexity: 3, category: "operations" },
   ],
   team: [
-    { horizon: "Immediate", title: "Publish org chart & accountabilities", description: "Make roles, owners and reporting lines explicit and visible.", priority: "P0", impact: 4, complexity: 1, category: "team" },
-    { horizon: "30 days", title: "Introduce a daily 15-min standup", description: "Sync blockers, priorities and dependencies across the team.", priority: "P1", impact: 3, complexity: 1, category: "team" },
-    { horizon: "6 months", title: "Hire / promote middle management", description: "Add a layer between founder and execution.", priority: "P1", impact: 5, complexity: 4, category: "team" },
+    { horizon: "فوري", title: "انشر الهيكل التنظيمي والمسؤوليات", description: "اجعل الأدوار وخطوط التقارير صريحة ومرئية.", priority: "P0", impact: 4, complexity: 1, category: "team" },
+    { horizon: "30 يوم", title: "اجتماع يومي قصير 15 دقيقة", description: "مزامنة العقبات والأولويات والترابطات.", priority: "P1", impact: 3, complexity: 1, category: "team" },
+    { horizon: "6 أشهر", title: "وظّف أو رقّ إدارة وسطى", description: "أضف طبقة بين المؤسّس والتنفيذ.", priority: "P1", impact: 5, complexity: 4, category: "team" },
   ],
   commercial: [
-    { horizon: "30 days", title: "Adopt a CRM and load active pipeline", description: "Pick one CRM. Migrate active deals. Define stages.", priority: "P0", impact: 5, complexity: 2, category: "commercial" },
-    { horizon: "90 days", title: "Define a 5-stage sales process", description: "Lead → Qualify → Proposal → Negotiation → Close. With criteria.", priority: "P1", impact: 4, complexity: 2, category: "commercial" },
-    { horizon: "6 months", title: "Customer retention playbook", description: "Post-sale check-ins, NPS, upsell cadence.", priority: "P2", impact: 3, complexity: 3, category: "commercial" },
+    { horizon: "30 يوم", title: "اعتمد CRM وأدخل خط المبيعات النشط", description: "اختر CRM واحد. أدخل الصفقات النشطة. حدّد المراحل.", priority: "P0", impact: 5, complexity: 2, category: "commercial" },
+    { horizon: "90 يوم", title: "صمّم عملية بيع من 5 مراحل", description: "عميل محتمل ← تأهيل ← عرض ← تفاوض ← إغلاق، بمعايير.", priority: "P1", impact: 4, complexity: 2, category: "commercial" },
+    { horizon: "6 أشهر", title: "دليل الاحتفاظ بالعملاء", description: "متابعة بعد البيع، NPS، إيقاع البيع الإضافي.", priority: "P2", impact: 3, complexity: 3, category: "commercial" },
   ],
   financial: [
-    { horizon: "30 days", title: "Weekly 1-page KPI dashboard", description: "Revenue, cash, AR, margin. Reviewed every Monday.", priority: "P0", impact: 5, complexity: 2, category: "financial" },
-    { horizon: "90 days", title: "Profitability per client / product", description: "Allocate costs and surface real margin contributors.", priority: "P1", impact: 4, complexity: 3, category: "financial" },
-    { horizon: "1 year", title: "Rolling 12-month forecast", description: "Cash flow forecast updated monthly to drive decisions.", priority: "P2", impact: 4, complexity: 4, category: "financial" },
+    { horizon: "30 يوم", title: "لوحة مؤشرات أسبوعية من صفحة واحدة", description: "الإيراد، السيولة، الذمم، الهامش. تُراجَع كل اثنين.", priority: "P0", impact: 5, complexity: 2, category: "financial" },
+    { horizon: "90 يوم", title: "ربحية لكل عميل / منتج", description: "وزّع التكاليف واكشف من يساهم فعلياً في الهامش.", priority: "P1", impact: 4, complexity: 3, category: "financial" },
+    { horizon: "سنة", title: "توقّعات متجدّدة لـ 12 شهراً", description: "توقّع تدفّق نقدي يُحدَّث شهرياً ويقود القرارات.", priority: "P2", impact: 4, complexity: 4, category: "financial" },
   ],
   scalability: [
-    { horizon: "90 days", title: "Design the 12-month org chart", description: "Map the company you want in 12 months. Identify gaps.", priority: "P1", impact: 5, complexity: 2, category: "scalability" },
-    { horizon: "6 months", title: "Structured hiring & onboarding", description: "Job specs, scorecards, 30-60-90 onboarding plans.", priority: "P1", impact: 4, complexity: 3, category: "scalability" },
-    { horizon: "1 year", title: "Annual strategic planning ritual", description: "Yearly off-site → quarterly OKRs → weekly KPIs.", priority: "P2", impact: 5, complexity: 3, category: "scalability" },
+    { horizon: "90 يوم", title: "صمّم الهيكل التنظيمي لـ 12 شهراً", description: "ارسم شكل الشركة بعد سنة. حدّد الفجوات.", priority: "P1", impact: 5, complexity: 2, category: "scalability" },
+    { horizon: "6 أشهر", title: "توظيف وتأهيل منظّم", description: "توصيف وظيفي، بطاقات تقييم، خطة تأهيل 30-60-90.", priority: "P1", impact: 4, complexity: 3, category: "scalability" },
+    { horizon: "سنة", title: "طقس تخطيط استراتيجي سنوي", description: "خلوة سنوية ← أهداف فصلية ← مؤشرات أسبوعية.", priority: "P2", impact: 5, complexity: 3, category: "scalability" },
   ],
 };
 
@@ -227,6 +227,6 @@ export function generateRoadmap(answers: Answers): RoadmapItem[] {
     else if (score < 65) items.push(...lib.slice(0, 2));
     else items.push(lib[0]);
   });
-  const horizonOrder: RoadmapItem["horizon"][] = ["Immediate", "30 days", "90 days", "6 months", "1 year"];
+  const horizonOrder: RoadmapItem["horizon"][] = ["فوري", "30 يوم", "90 يوم", "6 أشهر", "سنة"];
   return items.sort((a, b) => horizonOrder.indexOf(a.horizon) - horizonOrder.indexOf(b.horizon));
 }
