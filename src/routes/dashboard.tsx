@@ -10,11 +10,12 @@ import {
   detectBottlenecks,
   generateRoadmap,
   overallScore,
+  SEVERITY_LABELS,
   stageFor,
 } from "@/lib/assessment";
 import { loadAssessment, type SavedAssessment } from "@/lib/store";
 import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar, PolarRadiusAxis } from "recharts";
-import { ArrowRight, Send, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowLeft, Send, Sparkles, TrendingUp } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -23,9 +24,7 @@ export const Route = createFileRoute("/dashboard")({
 function DashboardPage() {
   const [data, setData] = useState<SavedAssessment | null>(null);
   useEffect(() => setData(loadAssessment()), []);
-
   if (!data) return <EmptyState />;
-
   return <DashboardContent data={data} />;
 }
 
@@ -34,11 +33,11 @@ function EmptyState() {
     <div className="min-h-screen bg-background">
       <Nav />
       <div className="mx-auto max-w-3xl px-6 py-24 text-center">
-        <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Dashboard</div>
-        <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">No diagnosis yet</h1>
-        <p className="mt-3 text-muted-foreground">Complete the maturity assessment to unlock your founder dashboard, bottlenecks and roadmap.</p>
+        <div className="text-xs font-bold tracking-wider text-primary">لوحة التحكم</div>
+        <h1 className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight">لم يتم التشخيص بعد</h1>
+        <p className="mt-3 text-muted-foreground">أكمل تقييم النضج لتفتح لوحة المؤسّس والاختناقات وخارطة الطريق.</p>
         <div className="mt-8">
-          <Button asChild size="lg"><Link to="/assessment">Start assessment <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
+          <Button asChild size="lg"><Link to="/assessment">ابدأ التشخيص <ArrowLeft className="ms-2 h-4 w-4" /></Link></Button>
         </div>
       </div>
     </div>
@@ -49,7 +48,6 @@ function DashboardContent({ data }: { data: SavedAssessment }) {
   const score = overallScore(data.answers);
   const stage = stageFor(score);
   const leadership = categoryScore("leadership", data.answers);
-  const operations = categoryScore("operations", data.answers);
   const team = categoryScore("team", data.answers);
   const scalability = categoryScore("scalability", data.answers);
   const bottlenecks = detectBottlenecks(data.answers);
@@ -58,7 +56,7 @@ function DashboardContent({ data }: { data: SavedAssessment }) {
   const radar = useMemo(
     () =>
       CATEGORIES.map((c) => ({
-        category: c.label.split(" ")[0],
+        category: c.short,
         value: categoryScore(c.key, data.answers),
       })),
     [data],
@@ -70,37 +68,34 @@ function DashboardContent({ data }: { data: SavedAssessment }) {
       <div className="mx-auto max-w-7xl px-6 py-10">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Founder Dashboard</div>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              {data.companyName || "Your company"}
-              <Badge variant="secondary" className="ml-3 align-middle text-xs">{stage.label}</Badge>
+            <div className="text-xs font-bold tracking-wider text-primary">لوحة المؤسّس</div>
+            <h1 className="mt-2 text-3xl font-extrabold tracking-tight">
+              {data.companyName || "شركتك"}
+              <Badge variant="secondary" className="ms-3 align-middle text-xs">{stage.label}</Badge>
             </h1>
-            <div className="mt-1 text-sm text-muted-foreground">Updated {new Date(data.completedAt).toLocaleDateString()}</div>
+            <div className="mt-1 text-sm text-muted-foreground">آخر تحديث {new Date(data.completedAt).toLocaleDateString("ar-DZ")}</div>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline"><Link to="/assessment">Retake assessment</Link></Button>
-            <Button asChild><Link to="/roadmap">Open roadmap <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
+            <Button asChild variant="outline"><Link to="/assessment">إعادة التشخيص</Link></Button>
+            <Button asChild><Link to="/roadmap">افتح خارطة الطريق <ArrowLeft className="ms-2 h-4 w-4" /></Link></Button>
           </div>
         </div>
 
-        {/* KPI widgets */}
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Kpi title="Overall maturity" value={score} suffix="/100" hint={stage.label} highlight />
-          <Kpi title="Dependency score" value={100 - leadership} suffix="/100" hint="Lower is better" invert />
-          <Kpi title="Delegation score" value={team} suffix="/100" hint="Role clarity & accountability" />
-          <Kpi title="Scalability score" value={scalability} suffix="/100" hint="Ready for next stage" />
+          <Kpi title="النضج الإجمالي" value={score} suffix="/100" hint={stage.label} highlight />
+          <Kpi title="مؤشر الاعتماد" value={100 - leadership} suffix="/100" hint="كلما انخفض كان أفضل" invert />
+          <Kpi title="مؤشر التفويض" value={team} suffix="/100" hint="وضوح الأدوار والمساءلة" />
+          <Kpi title="مؤشر التوسّع" value={scalability} suffix="/100" hint="الجاهزية للمرحلة التالية" />
         </div>
 
-        {/* Main grid */}
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {/* Radar */}
           <div className="lg:col-span-2 rounded-3xl border border-border bg-card p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-semibold">Operational maturity radar</div>
-                <div className="text-xs text-muted-foreground">Across all six dimensions</div>
+                <div className="text-sm font-bold">رادار النضج التشغيلي</div>
+                <div className="text-xs text-muted-foreground">عبر الأبعاد الستة</div>
               </div>
-              <Link to="/results" className="text-xs font-medium text-primary hover:underline">View report →</Link>
+              <Link to="/results" className="text-xs font-bold text-foreground hover:text-primary">عرض التقرير ←</Link>
             </div>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -108,53 +103,51 @@ function DashboardContent({ data }: { data: SavedAssessment }) {
                   <PolarGrid stroke="var(--border)" />
                   <PolarAngleAxis dataKey="category" tick={{ fill: "var(--muted-foreground)", fontSize: 11 }} />
                   <PolarRadiusAxis domain={[0, 100]} stroke="var(--border)" tick={{ fill: "var(--muted-foreground)", fontSize: 10 }} />
-                  <Radar dataKey="value" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.25} strokeWidth={2} />
+                  <Radar dataKey="value" stroke="var(--chart-1)" fill="var(--chart-1)" fillOpacity={0.35} strokeWidth={2} />
                 </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* AI Advisor */}
           <AIAdvisor stage={stage.label} score={score} />
         </div>
 
-        {/* Bottlenecks + Roadmap */}
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">Top bottlenecks</div>
-              <Link to="/results" className="text-xs font-medium text-primary hover:underline">All insights →</Link>
+              <div className="text-sm font-bold">أهم الاختناقات</div>
+              <Link to="/results" className="text-xs font-bold text-foreground hover:text-primary">كل الرؤى ←</Link>
             </div>
             <div className="mt-4 space-y-3">
               {bottlenecks.slice(0, 4).map((b) => (
                 <div key={b.title} className="rounded-2xl border border-border bg-background p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm font-semibold">{b.title}</div>
-                    <Badge variant="outline" className="capitalize text-[10px]">{b.severity}</Badge>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-sm font-bold">{b.title}</div>
+                    <Badge variant="outline" className="text-[10px] shrink-0">{SEVERITY_LABELS[b.severity]}</Badge>
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{b.recommendation}</div>
                 </div>
               ))}
               {bottlenecks.length === 0 && (
-                <div className="text-sm text-muted-foreground">No critical bottlenecks. You're scaling well.</div>
+                <div className="text-sm text-muted-foreground">لا توجد اختناقات حرجة. أنت تتوسّع بشكل جيد.</div>
               )}
             </div>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">Next actions</div>
-              <Link to="/roadmap" className="text-xs font-medium text-primary hover:underline">Full roadmap →</Link>
+              <div className="text-sm font-bold">الإجراءات القادمة</div>
+              <Link to="/roadmap" className="text-xs font-bold text-foreground hover:text-primary">خارطة كاملة ←</Link>
             </div>
             <div className="mt-4 space-y-3">
               {roadmap.map((r) => (
                 <div key={r.title} className="flex items-start gap-3 rounded-2xl border border-border bg-background p-4">
-                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary text-xs font-semibold">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/15 text-foreground text-xs font-extrabold">
                     {r.priority}
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className="text-sm font-semibold truncate">{r.title}</div>
+                      <div className="text-sm font-bold truncate">{r.title}</div>
                       <Badge variant="secondary" className="shrink-0 text-[10px]">{r.horizon}</Badge>
                     </div>
                     <div className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{r.description}</div>
@@ -185,26 +178,14 @@ function Kpi({
   invert?: boolean;
 }) {
   const tone = invert
-    ? value < 30
-      ? "text-primary"
-      : value < 60
-        ? "text-foreground"
-        : "text-destructive"
-    : value > 70
-      ? "text-primary"
-      : value > 40
-        ? "text-foreground"
-        : "text-destructive";
+    ? value < 30 ? "text-primary" : value < 60 ? "text-foreground" : "text-destructive"
+    : value > 70 ? "text-primary" : value > 40 ? "text-foreground" : "text-destructive";
 
   return (
-    <div
-      className={`rounded-2xl border p-5 ${
-        highlight ? "border-primary/30 bg-primary/5" : "border-border bg-card"
-      }`}
-    >
-      <div className="text-xs uppercase tracking-wider text-muted-foreground">{title}</div>
+    <div className={`rounded-2xl border p-5 ${highlight ? "border-primary/40 bg-primary/10" : "border-border bg-card"}`}>
+      <div className="text-xs tracking-wider text-muted-foreground">{title}</div>
       <div className="mt-2 flex items-baseline gap-1">
-        <div className={`text-3xl font-semibold tracking-tight ${tone}`}>{value}</div>
+        <div className={`text-3xl font-extrabold tracking-tight ${tone}`}>{value}</div>
         {suffix && <div className="text-xs text-muted-foreground">{suffix}</div>}
       </div>
       <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-muted">
@@ -219,40 +200,38 @@ function Kpi({
   );
 }
 
-/* ---------------- AI Advisor (lightweight, rules-based) ---------------- */
-
 type Msg = { role: "user" | "assistant"; text: string };
 
 const SUGGESTIONS = [
-  "Why is my company dependent on me?",
-  "How do I delegate operations?",
-  "What should I structure first?",
-  "How can I scale without chaos?",
+  "لماذا تعتمد شركتي عليّ؟",
+  "كيف أفوّض العمليات؟",
+  "بماذا أبدأ الهيكلة؟",
+  "كيف أتوسّع دون فوضى؟",
 ];
 
 function advisorAnswer(q: string, stage: string, score: number): string {
   const t = q.toLowerCase();
-  if (t.includes("dependent") || t.includes("dependency") || t.includes("depend on me")) {
-    return `Founder dependency typically comes from three places: (1) all decisions route through you, (2) no documented playbooks for recurring work, (3) no empowered middle layer. At your current stage (${stage}, score ${score}/100), start by listing the 10 decisions only you make this week, then transfer 3 with written criteria.`;
+  if (q.includes("تعتمد") || q.includes("اعتماد") || t.includes("dependent")) {
+    return `الاعتماد على المؤسّس يأتي عادةً من ثلاثة مصادر: (1) كل القرارات تمرّ عبرك، (2) لا توجد إجراءات موثّقة للعمل المتكرر، (3) لا توجد طبقة إدارية وسطى مفوَّضة. في مرحلتك الحالية (${stage}، ${score}/100)، ابدأ بكتابة 10 قرارات تتخذها وحدك هذا الأسبوع، ثم انقل 3 منها بمعايير مكتوبة.`;
   }
-  if (t.includes("delegate")) {
-    return `Delegate by decision type, not by task. Document the decision rights matrix: who decides, who is consulted, who is informed. Begin with low-risk recurring decisions (pricing under X, approvals under Y, hiring up to level Z). Review weekly for 4 weeks before expanding scope.`;
+  if (q.includes("فوّض") || q.includes("فوض") || q.includes("تفويض")) {
+    return `فوّض حسب نوع القرار لا حسب المهمة. وثّق مصفوفة صلاحيات القرار: من يقرّر، من يُستشار، من يُعلَم. ابدأ بقرارات متكررة منخفضة المخاطر (تسعير تحت X، موافقات تحت Y، توظيف حتى مستوى Z). راجع أسبوعياً لمدة 4 أسابيع قبل التوسيع.`;
   }
-  if (t.includes("structure") || t.includes("first")) {
-    return `Structure in this order: (1) Decision rights & org chart, (2) weekly leadership review, (3) 5 SOPs for the most repeated workflows, (4) a 1-page KPI dashboard, (5) hiring/onboarding playbook. Anything else is premature optimization.`;
+  if (q.includes("هيكل") || q.includes("بداي") || q.includes("ابدأ")) {
+    return `الهيكلة بهذا الترتيب: (1) صلاحيات القرار والهيكل التنظيمي، (2) مراجعة قيادية أسبوعية، (3) 5 إجراءات SOP لأكثر الأعمال تكراراً، (4) لوحة مؤشرات من صفحة واحدة، (5) دليل توظيف وتأهيل. ما عدا ذلك تحسين سابق لأوانه.`;
   }
-  if (t.includes("scale") || t.includes("chaos") || t.includes("grow")) {
-    return `Scaling amplifies whatever you already have. Before adding revenue or headcount, install: a weekly KPI ritual, role clarity, documented core processes, and a middle-management layer. Otherwise growth multiplies the chaos by the same factor it multiplies revenue.`;
+  if (q.includes("توسّع") || q.includes("توسع") || q.includes("نمو") || q.includes("فوضى")) {
+    return `التوسّع يُضخّم ما تملكه أصلاً. قبل إضافة إيرادات أو موظفين، ركّب: طقساً أسبوعياً للمؤشرات، وضوحاً للأدوار، توثيق العمليات الأساسية، وطبقة إدارية وسطى. وإلا فإن النمو يضاعف الفوضى بنفس النسبة التي يضاعف بها الإيرادات.`;
   }
-  if (t.includes("hire") || t.includes("recruit")) {
-    return `Hire against a written job spec with a 30-60-90 onboarding plan and clear scorecard. Your two best leverage hires today are likely: an Operations Manager (to own SOPs and rituals) and a Commercial Manager (to own pipeline and forecast).`;
+  if (q.includes("توظيف") || q.includes("وظف")) {
+    return `وظّف بناءً على توصيف وظيفي مكتوب مع خطة تأهيل 30-60-90 وبطاقة تقييم واضحة. توظيفان أكثر رافعةً اليوم: مدير عمليات (يملك الإجراءات والطقوس) ومدير تجاري (يملك خط المبيعات والتوقّع).`;
   }
-  return `At ${stage} (score ${score}/100), the highest-leverage move is to remove yourself from one recurring decision per week, while building the system that replaces you. Focus on rituals (weekly review), artifacts (SOPs, dashboards) and clarity (roles, decision rights) — in that order.`;
+  return `في مرحلة ${stage} (${score}/100)، أعلى رافعة هي إخراج نفسك من قرار متكرر واحد كل أسبوع، مع بناء النظام الذي يحلّ محلّك. ركّز على الطقوس (مراجعة أسبوعية)، المخرجات (إجراءات، لوحات مؤشرات)، والوضوح (أدوار، صلاحيات قرار) — بهذا الترتيب.`;
 }
 
 function AIAdvisor({ stage, score }: { stage: string; score: number }) {
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", text: `I'm your strategic advisor. Ask me anything about scaling, delegation or structure. Your current stage is ${stage} (${score}/100).` },
+    { role: "assistant", text: `أنا مستشارك الاستراتيجي. اسألني عن التوسّع والتفويض والهيكلة. مرحلتك الحالية: ${stage} (${score}/100).` },
   ]);
   const [input, setInput] = useState("");
 
@@ -272,19 +251,19 @@ function AIAdvisor({ stage, score }: { stage: string; score: number }) {
           <Sparkles className="h-4 w-4" />
         </div>
         <div>
-          <div className="text-sm font-semibold">AI Strategic Advisor</div>
-          <div className="text-xs text-muted-foreground">Operational coach · 24/7</div>
+          <div className="text-sm font-bold">المستشار الذكي</div>
+          <div className="text-xs text-muted-foreground">مدرّب تشغيلي · 24/7</div>
         </div>
       </div>
 
-      <div className="mt-4 flex-1 space-y-3 max-h-72 overflow-y-auto pr-1">
+      <div className="mt-4 flex-1 space-y-3 max-h-72 overflow-y-auto pe-1">
         {messages.map((m, i) => (
           <div
             key={i}
             className={`rounded-2xl px-3 py-2 text-sm leading-relaxed ${
               m.role === "user"
-                ? "ml-6 bg-primary text-primary-foreground"
-                : "mr-6 bg-background border border-border"
+                ? "ms-6 bg-primary text-primary-foreground"
+                : "me-6 bg-background border border-border"
             }`}
           >
             {m.text}
@@ -294,21 +273,18 @@ function AIAdvisor({ stage, score }: { stage: string; score: number }) {
 
       <div className="mt-3 flex flex-wrap gap-1.5">
         {SUGGESTIONS.map((s) => (
-          <button key={s} onClick={() => ask(s)} className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground hover:border-primary/40 hover:text-foreground transition">
+          <button key={s} onClick={() => ask(s)} className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] text-muted-foreground hover:border-primary/50 hover:text-foreground transition">
             {s}
           </button>
         ))}
       </div>
 
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(input);
-        }}
+        onSubmit={(e) => { e.preventDefault(); ask(input); }}
         className="mt-3 flex gap-2"
       >
-        <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Ask your advisor…" />
-        <Button type="submit" size="icon" aria-label="Send"><Send className="h-4 w-4" /></Button>
+        <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="اسأل مستشارك…" />
+        <Button type="submit" size="icon" aria-label="إرسال"><Send className="h-4 w-4" /></Button>
       </form>
     </div>
   );
