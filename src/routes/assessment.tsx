@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CATEGORIES, QUESTIONS, SCALE, type Answers, type CategoryKey } from "@/lib/assessment";
-import { loadAssessment, loadProfile, saveAssessment, saveProfile } from "@/lib/store";
+import { loadAssessment, loadProfile, saveAssessment, saveProfile, saveAssessmentToCloud } from "@/lib/store";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 
 export const Route = createFileRoute("/assessment")({
@@ -50,10 +52,21 @@ function AssessmentPage() {
     return true;
   })();
 
-  function next() {
+  async function next() {
     if (step.kind === "profile") saveProfile(profile);
     if (stepIdx === steps.length - 1) {
-      saveAssessment({ ...profile, answers, completedAt: new Date().toISOString() });
+      const saved = { ...profile, answers, completedAt: new Date().toISOString() };
+      saveAssessment(saved);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { error } = await saveAssessmentToCloud(saved);
+        if (error) toast.error("تعذّر الحفظ في الحساب: " + error);
+        else toast.success("تم حفظ التشخيص في حسابك.");
+      } else {
+        toast.message("سجّل الدخول لحفظ التشخيص بشكل دائم.", {
+          action: { label: "تسجيل الدخول", onClick: () => navigate({ to: "/auth" }) },
+        });
+      }
       navigate({ to: "/results" });
       return;
     }
